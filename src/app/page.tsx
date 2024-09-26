@@ -1,101 +1,145 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { Transition } from '@headlessui/react';
+import { FaSun, FaMoon } from 'react-icons/fa';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [birthDate, setBirthDate] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+  const [age, setAge] = useState<number | null>(null);
+  const [ageInDays, setAgeInDays] = useState<number | null>(null);
+  const [ageInHours, setAgeInHours] = useState<number | null>(null);
+  const [daysAfter14, setDaysAfter14] = useState<number | null>(null);
+  const [darkMode, setDarkMode] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const calculateAge = () => {
+    if (birthDate && currentDate) {
+      const birth = new Date(birthDate);
+      const current = new Date(currentDate);
+
+      // Calculate age in years
+      let calculatedAge = current.getFullYear() - birth.getFullYear();
+      const monthDiff = current.getMonth() - birth.getMonth();
+
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && current.getDate() < birth.getDate())
+      ) {
+        calculatedAge--;
+      }
+
+      setAge(calculatedAge);
+
+      // Calculate age in days
+      const timeDiff = current.getTime() - birth.getTime();
+      const calculatedAgeInDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+      setAgeInDays(calculatedAgeInDays);
+
+      // Calculate age in hours
+      const calculatedAgeInHours = Math.floor(timeDiff / (1000 * 3600));
+      setAgeInHours(calculatedAgeInHours);
+
+      // Calculate days after turning 14
+      const fourteenthBirthday = new Date(birth);
+      fourteenthBirthday.setFullYear(birth.getFullYear() + 14);
+
+      let daysAfter14 = null;
+
+      if (current > fourteenthBirthday) {
+        const diffAfter14 = current.getTime() - fourteenthBirthday.getTime();
+        daysAfter14 = Math.floor(diffAfter14 / (1000 * 3600 * 24));
+        setDaysAfter14(daysAfter14);
+      } else {
+        setDaysAfter14(null);
+      }
+    }
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  return (
+    <div
+      className={`flex flex-col items-center justify-center min-h-screen w-screen transition-colors duration-500 ${
+        darkMode
+          ? 'bg-gray-900 text-white'
+          : 'bg-gradient-to-br from-gray-100 via-blue-100 to-gray-200 text-gray-900'
+      }`}
+    >
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleDarkMode}
+        className="absolute top-4 right-4 p-2 rounded-full focus:outline-none"
+        aria-label="Toggle Dark Mode"
+      >
+        {darkMode ? (
+          <FaSun className="text-yellow-400 w-6 h-6" />
+        ) : (
+          <FaMoon className="text-gray-700 w-6 h-6" />
+        )}
+      </button>
+
+      <h1 className="text-4xl mb-8 font-bold">
+        Welcome to Age Calculator
+      </h1>
+
+      <div className="flex flex-col items-center space-y-4">
+        <input
+          type="date"
+          value={birthDate}
+          onChange={(e) => setBirthDate(e.target.value)}
+          className={`p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            darkMode
+              ? 'bg-gray-800 text-white placeholder-gray-400 border-gray-600'
+              : 'bg-white text-gray-900 placeholder-gray-500 border-gray-300'
+          }`}
+          required
+          title="Enter your date of birth"
+        />
+        <input
+          type="date"
+          value={currentDate}
+          onChange={(e) => setCurrentDate(e.target.value)}
+          className={`p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            darkMode
+              ? 'bg-gray-800 text-white placeholder-gray-400 border-gray-600'
+              : 'bg-white text-gray-900 placeholder-gray-500 border-gray-300'
+          }`}
+          required
+          title="Enter the current date"
+        />
+        <button
+          onClick={calculateAge}
+          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+        >
+          Calculate Age
+        </button>
+
+        {age !== null && (
+          <Transition
+            show={true}
+            enter="transition-opacity duration-700"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <div className="text-2xl mt-4 space-y-2 text-center">
+              <p>
+                Your age is: {age} {age === 1 ? 'year' : 'years'} old
+              </p>
+              <p>You are {ageInDays} days old</p>
+              <p>You are {ageInHours} hours old</p>
+              {daysAfter14 !== null && (
+                <p>
+                  You have been over 14 years old for {daysAfter14}{' '}
+                  {daysAfter14 === 1 ? 'day' : 'days'}
+                </p>
+              )}
+            </div>
+          </Transition>
+        )}
+      </div>
     </div>
   );
 }
