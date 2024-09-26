@@ -166,7 +166,7 @@ export default function Home() {
             </Transition>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap justify-center space-x-4 mt-6">
+            <div className="flex flex-wrap justify-center gap-6 mt-15">
               <button
                 onClick={speakAge}
                 className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transform hover:scale-105 transition duration-300"
