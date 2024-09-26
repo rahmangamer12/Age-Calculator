@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
@@ -5,15 +7,21 @@ interface BackgroundNumbersProps {
   darkMode: boolean;
 }
 
-const numbersArray = Array.from({ length: 50 }, () =>
-  Math.floor(Math.random() * 100)
-);
-
 export default function BackgroundNumbers({ darkMode }: BackgroundNumbersProps) {
   const [windowSize, setWindowSize] = useState({
     width: 0,
     height: 0,
   });
+
+  const [numbersArray, setNumbersArray] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Generate the numbersArray only on the client
+    const nums = Array.from({ length: 50 }, () =>
+      Math.floor(Math.random() * 100)
+    );
+    setNumbersArray(nums);
+  }, []);
 
   useEffect(() => {
     // Update window size on mount and resize
@@ -27,6 +35,11 @@ export default function BackgroundNumbers({ darkMode }: BackgroundNumbersProps) 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Wait until the numbersArray is populated
+  if (numbersArray.length === 0 || windowSize.width === 0) {
+    return null; // Render nothing during SSR and until the numbers are generated
+  }
 
   return (
     <>
@@ -44,7 +57,7 @@ export default function BackgroundNumbers({ darkMode }: BackgroundNumbersProps) 
               fontSize: `${size}px`,
               top: startY,
               left: startX,
-              color: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+              color: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.4)',
               userSelect: 'none',
             }}
             animate={{

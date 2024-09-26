@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import { motion } from 'framer-motion';
 import BackgroundNumbers from './BackgroundNumbers';
 
 export default function Home() {
@@ -79,13 +78,13 @@ export default function Home() {
         )}
       </button>
 
-      <h1 className="text-4xl mb-8 font-bold animate-pulse z-10">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-8 font-bold animate-pulse z-10 text-center px-4">
         Welcome to Age Calculator
       </h1>
 
-      <div className="flex flex-col items-center space-y-6 z-10">
+      <div className="flex flex-col items-center space-y-6 z-10 w-full max-w-md px-4">
         {/* Date of Birth Input */}
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start w-full">
           <label
             htmlFor="birthDate"
             className="mb-2 text-lg font-medium animate-fade-in"
@@ -97,7 +96,7 @@ export default function Home() {
             type="date"
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
-            className={`p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${
+            className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${
               darkMode
                 ? 'bg-gray-800 text-white placeholder-gray-400 border-gray-600'
                 : 'bg-white text-gray-900 placeholder-gray-500 border-gray-300'
@@ -108,7 +107,7 @@ export default function Home() {
         </div>
 
         {/* Current Date Input */}
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start w-full">
           <label
             htmlFor="currentDate"
             className="mb-2 text-lg font-medium animate-fade-in"
@@ -120,7 +119,7 @@ export default function Home() {
             type="date"
             value={currentDate}
             onChange={(e) => setCurrentDate(e.target.value)}
-            className={`p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${
+            className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${
               darkMode
                 ? 'bg-gray-800 text-white placeholder-gray-400 border-gray-600'
                 : 'bg-white text-gray-900 placeholder-gray-500 border-gray-300'
@@ -147,7 +146,7 @@ export default function Home() {
               enterFrom="opacity-0"
               enterTo="opacity-100"
             >
-              <div className="text-2xl mt-6 space-y-4 text-center animate-slide-in">
+              <div className="text-xl sm:text-2xl mt-6 space-y-4 text-center animate-slide-in px-4">
                 <p>
                   You are{' '}
                   <span className="font-semibold">
